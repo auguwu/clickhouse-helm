@@ -1,0 +1,138 @@
+# 🏚️ clickhouse-helm: Production-ready Helm chart for deploying ClickHouse onto a Kubernetes cluster! ヽ(>∀<☆)ノ
+# Copyright © 2022 Noel <cutie@floofy.dev>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+replicas: 3
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+image:
+  repository: clickhouse/clickhouse-server
+  pullPolicy: IfNotPresent
+  tag: ""
+  registry: docker.io
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+podSecurityContext: {}
+securityContext: {}
+service:
+  type: ClusterIP
+  port: 9000
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+zookeeper:
+  enabled: false
+profiles:
+  - default:
+      maxMemoryUsage: 10000000000
+      useUncompressedCache: true
+      loadBalancing: inorder
+      logQueries: false
+      maxThreads: 8
+      maxRowsToRead: 1000000000
+      maxBytesToRead: 100000000000
+      maxRowsToGroupBy: 1000000
+      groupByOverflowMode: any
+      maxRowsToSort: 1000000
+      maxBytesToSort: 1000000000
+      maxResultRow: 100000
+      maxResultBytes: 100000000
+      resultOverflowMode: break
+      maxExecutionTime: 600
+      minExecutionSpeed: 1000000
+      timeBeforeCheckingExecutionSpeed: 15
+      maxColumnsToRead: 25
+      maxTemporaryColumns: 100
+      maxTemporaryNonConstColumns: 50
+      maxSubqueryDepth: 2
+      maxPipelineDepth: 25
+      maxAstDepth: 50
+      maxAstElements: 100
+      readonly: false
+users:
+  - you:
+      # Use a blank, empty password for an auto-generated one that
+      # will be contained as a secret.
+      password: ""
+      accessManagement: true
+      # networks:
+        # - ip: ""
+        #   host: ""
+        #   hostRegex: ""
+        #   attributes:
+        #     incl: "networks"
+        #     replace: "replace"
+      profile: default
+      quota: default
+      defaultDatabaseName: default
+      # databases:
+      #   default:
+      #     <some-column>:
+      #       filter: expression
+settings:
+  allowNondeterministicMutations: true
+  distributedParentMode: allow
+  preferGlobalInAndJoin: false
+  enableOptimizePredicateExpression: true
+  fallbackToStaleReplicasForDistributedQueries: true
+  forceIndexByDate: false
+  forcePrimaryKey: true
+  useSkipIndexes: true
+  forceDataSkippingIndices: false
+  fsyncMetadata: true
+  functionRangeElementsInBlock: 500000000
+  enableHttpCompression: false
+  httpZlibCompressionLevel: 3
+  httpNativeCompressionDisableChecksummingOnDecompress: false
+  httpMaxUriSize: 1048576
+  tableFunctionRemoteMaxAddresses: 1000
+  globExpansionMaxElements: 1000
+  sendProgressInHttpHeaders: false
+  maxHttpGetRedirects: 0
+  inputFormatErrorsNum: 0
+  inputFormatALlowErrorsRation: 0
+  inputFormatParquetImportNested: false
+  inputFormatArrowImportNested: false
+  inputFormatOrcImportNested: false
+  inputFormatValuesInterpretExpressions: false
+  inputFormatValuesDeduceTemplatesOfExpressions: true
+  inputFormatDefaultsForOmittedFields: true
+  inputFormatTsvEmptyAsDefault: false
+  inputFormatCsvEmptyAsDefault: true
+  inputFormatTsvEnumAsNumber: false
+  inputFormatNullAsDefault: true
+  insertNullAsDefault: true
+  inputFormatSkipUnknownFields: false
+  inputFormatImportNestedJSON: false
+  inputFormatWithNamesUseHeader: true
+  inputFormatWithTypesUseHeader: true
+  datetimeInputFormat: basic
+  datetimeOutputFormat: simple
